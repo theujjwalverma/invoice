@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BFit with Krishna Inc. - Interactive Invoice Generator</title>
+  <!-- Modern Premium Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* CSS Variables for Premium Styling */
+    :root {
+      --primary: #334e68;
+      --primary-light: #486581;
+      --primary-dark: #243b53;
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --text-main: #102a43;
+      --text-muted: #627d98;
+      --border-color: #bcccdc;
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 10px 20px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.12);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Mobile First: Body Padding & Spacing */
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 15px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      line-height: 1.5;
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding: 40px 20px;
+        gap: 40px;
+      }
+    }
+
+    /* Setup Form Card Layout */
+    .setup-container {
+      width: 100%;
+      max-width: 950px;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: var(--radius-md);
+      padding: 20px 15px;
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition);
+    }
+
+    @media (min-width: 768px) {
+      .setup-container {
+        padding: 40px;
+        border-radius: var(--radius-lg);
+      }
+    }
+
+    .setup-header {
+      margin-bottom: 25px;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    @media (min-width: 768px) {
+      .setup-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+      }
+    }
+
+    .setup-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    @media (min-width: 768px) {
+      .setup-title {
+        font-size: 28px;
+      }
+    }
+
+    .setup-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Mobile First Input Grid System */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    @media (min-width: 768px) {
+      .form-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    @media (min-width: 768px) {
+      .form-group.span-2 {
+        grid-column: span 2;
+      }
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--primary-dark);
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+      font-family: inherit;
+      font-size: 15px;
+      padding: 12px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      background-color: #fff;
+      color: var(--text-main);
+      outline: none;
+      transition: var(--transition);
+      width: 100%;
+    }
+
+    @media (min-width: 768px) {
+      input[type="text"],
+      input[type="number"],
+      input[type="date"],
+      select {
+        padding: 12px 16px;
+      }
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="date"]:focus,
+    select:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(72, 101, 129, 0.15);
+    }
+
+    /* Live Summary Card inside setup form */
+    .live-summary-card {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      color: white;
+      border-radius: var(--radius-md);
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      margin-bottom: 25px;
+      box-shadow: var(--shadow-md);
+    }
+
+    @media (min-width: 768px) {
+      .live-summary-card {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        margin-bottom: 30px;
+      }
+    }
+
+    .live-summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 8px;
+    }
+
+    .live-summary-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    @media (min-width: 768px) {
+      .live-summary-item {
+        flex-direction: column;
+        align-items: flex-start;
+        border-bottom: none;
+        padding-bottom: 0;
+        gap: 4px;
+      }
+    }
+
+    .live-summary-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.8;
+    }
+
+    .live-summary-val {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    @media (min-width: 768px) {
+      .live-summary-val {
+        font-size: 22px;
+      }
+    }
+
+    .live-summary-val.accent {
+      color: #34d399;
+    }
+
+    /* Dynamic Row Styles (Mobile First) */
+    .session-rows-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .session-row {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 15px;
+      border-radius: var(--radius-md);
+      margin-bottom: 15px;
+      position: relative;
+      animation: slideIn 0.3s ease;
+      transition: var(--transition);
+    }
+
+    .session-row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      width: 100%;
+      gap: 10px;
+    }
+
+    @media (min-width: 768px) {
+      .session-row {
+        flex-direction: row;
+        align-items: center;
+        gap: 20px;
+        padding: 15px 20px;
+      }
+
+      .session-row-header {
+        width: 200px;
+        align-items: center;
+      }
+    }
+
+    .session-row:hover {
+      box-shadow: var(--shadow-sm);
+      border-color: var(--border-color);
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Timing Checklist Badges */
+    .timing-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    @media (min-width: 768px) {
+      .timing-container {
+        gap: 8px;
+      }
+    }
+
+    .timing-badge {
+      position: relative;
+    }
+
+    .timing-badge input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .timing-label {
+      display: inline-block;
+      padding: 6px 12px;
+      background: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      user-select: none;
+      transition: var(--transition);
+    }
+
+    @media (min-width: 768px) {
+      .timing-label {
+        padding: 8px 16px;
+        font-size: 13px;
+      }
+    }
+
+    .timing-badge input[type="checkbox"]:checked + .timing-label {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 6px rgba(51, 78, 104, 0.25);
+    }
+
+    .timing-label:hover {
+      background: #f1f5f9;
+      border-color: var(--primary-light);
+    }
+
+    .timing-badge input[type="checkbox"]:checked + .timing-label:hover {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+    }
+
+    /* Remove Row Buttons */
+    .btn-delete {
+      background: #fee2e2;
+      color: #ef4444;
+      border: none;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+      transition: var(--transition);
+    }
+
+    .btn-delete:hover {
+      background: #fca5a5;
+      color: #b91c1c;
+      transform: scale(1.05);
+    }
+
+    .mobile-delete {
+      display: flex;
+    }
+
+    .desktop-delete {
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      .mobile-delete {
+        display: none;
+      }
+      .desktop-delete {
+        display: flex;
+      }
+    }
+
+    /* Actions Panel */
+    .actions-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 25px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    @media (min-width: 768px) {
+      .actions-panel {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 30px;
+        padding-top: 20px;
+      }
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    @media (min-width: 768px) {
+      .btn {
+        width: auto;
+      }
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: var(--primary-dark);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      border-color: var(--primary-light);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 6px 12px rgba(16, 185, 129, 0.3);
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================================================
+       INVOICE PREVIEW CONTAINER & PAPER STYLING
+       ========================================================================== */
+    .invoice-preview-container {
+      width: 100%;
+      max-width: 950px;
+      display: none; /* Initially hidden until Generated */
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      animation: slideIn 0.5s ease;
+    }
+
+    .invoice-paper {
+      background: #ffffff;
+      width: 100%;
+      padding: 25px 15px;
+      box-shadow: var(--shadow-lg);
+      border-radius: var(--radius-md);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #333333;
+      overflow-x: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .invoice-paper {
+        aspect-ratio: 1 / 1.414; /* A4 Ratio */
+        min-height: 1120px;
+        padding: 60px 50px 50px 50px;
+      }
+    }
+
+    /* Invoice Content layout */
+    .invoice-header {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    @media (min-width: 768px) {
+      .invoice-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 40px;
+      }
+    }
+
+    .invoice-header-left h1 {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.1;
+      letter-spacing: -1px;
+    }
+
+    @media (min-width: 768px) {
+      .invoice-header-left h1 {
+        font-size: 40px;
+      }
+    }
+
+    .invoice-header-left .hst-number {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .invoice-header-right {
+      text-align: left;
+      font-size: 13px;
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    @media (min-width: 768px) {
+      .invoice-header-right {
+        text-align: right;
+        font-size: 14px;
+      }
+    }
+
+    .invoice-header-right div strong {
+      color: var(--primary);
+    }
+
+    /* Billing info block */
+    .billing-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      border-top: 3px solid var(--primary);
+      border-bottom: 1px solid #e2e8f0;
+      padding: 15px 0;
+      margin-bottom: 25px;
+    }
+
+    @media (min-width: 768px) {
+      .billing-grid {
+        grid-template-columns: 1fr 1fr;
+        padding: 20px 0;
+        margin-bottom: 35px;
+        gap: 0;
+      }
+    }
+
+    .billing-col {
+      line-height: 1.6;
+    }
+
+    .billing-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .billing-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .billing-address {
+      font-size: 13px;
+      color: #4a5568;
+      white-space: pre-line;
+    }
+
+    /* Table wrapper for mobile scrolling */
+    .invoice-table-wrapper {
+      flex-grow: 1;
+      margin-bottom: 25px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    @media (min-width: 768px) {
+      .invoice-table-wrapper {
+        margin-bottom: 40px;
+      }
+    }
+
+    .invoice-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      min-width: 600px; /* Force minimum table width on tiny screens to maintain layout */
+    }
+
+    .invoice-table th {
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 10px 12px;
+    }
+
+    @media (min-width: 768px) {
+      .invoice-table th {
+        font-size: 13px;
+        padding: 12px 16px;
+      }
+    }
+
+    .invoice-table th:nth-child(1) { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+    .invoice-table th:nth-child(5) { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+
+    .invoice-table td {
+      padding: 10px 12px;
+      font-size: 13px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #2d3748;
+    }
+
+    @media (min-width: 768px) {
+      .invoice-table td {
+        padding: 14px 16px;
+        font-size: 14px;
+      }
+    }
+
+    .invoice-table tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    .invoice-table td.text-right,
+    .invoice-table th.text-right {
+      text-align: right;
+    }
+
+    .invoice-table td.text-center,
+    .invoice-table th.text-center {
+      text-align: center;
+    }
+
+    /* Summary Block */
+    .summary-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 15px;
+      margin-bottom: 30px;
+    }
+
+    @media (min-width: 768px) {
+      .summary-wrapper {
+        margin-top: 20px;
+        margin-bottom: 50px;
+      }
+    }
+
+    .summary-table {
+      width: 100%;
+      max-width: 320px;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    @media (min-width: 768px) {
+      .summary-table {
+        font-size: 14px;
+      }
+    }
+
+    .summary-table td {
+      padding: 6px 10px;
+      color: #4a5568;
+    }
+
+    .summary-table td.text-right {
+      text-align: right;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .summary-table tr.total-row {
+      border-top: 1px solid var(--border-color);
+      border-bottom: 4px double var(--primary);
+    }
+
+    .summary-table tr.total-row td {
+      padding: 10px 10px;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    @media (min-width: 768px) {
+      .summary-table tr.total-row td {
+        font-size: 18px;
+        padding: 12px 12px;
+      }
+    }
+
+    /* Footer Block */
+    .invoice-footer {
+      border-top: 1px solid var(--border-color);
+      padding-top: 15px;
+      font-size: 10px;
+      color: #718096;
+      line-height: 1.6;
+    }
+
+    @media (min-width: 768px) {
+      .invoice-footer {
+        padding-top: 20px;
+        font-size: 11px;
+      }
+    }
+
+    .footer-row-top {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+
+    @media (min-width: 768px) {
+      .footer-row-top {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 0;
+      }
+    }
+
+    .footer-col-biz {
+      flex: 1;
+    }
+
+    .footer-col-payment {
+      flex: 1;
+      text-align: left;
+    }
+
+    @media (min-width: 768px) {
+      .footer-col-payment {
+        text-align: right;
+      }
+    }
+
+    .footer-highlight {
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .footer-disclaimer {
+      text-align: center;
+      font-weight: 600;
+      font-style: italic;
+      color: var(--text-muted);
+      border-top: 1px dashed #e2e8f0;
+      padding-top: 10px;
+    }
+
+    /* Actions Panel underneath Preview */
+    .preview-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      margin-bottom: 30px;
+    }
+
+    @media (min-width: 768px) {
+      .preview-actions {
+        flex-direction: row;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 40px;
+      }
+    }
+
+    /* ==========================================================================
+       MEDIA RULES FOR PRINTING
+       ========================================================================== */
+    @media print {
+      @page {
+        margin: 0;
+      }
+      body {
+        background: none;
+        padding: 0;
+        margin: 0;
+        display: block;
+        min-height: auto;
+      }
+
+      /* Hide Setup Form, Dashboard, Actions Panel and Preview Buttons entirely */
+      .setup-container,
+      .preview-actions,
+      header,
+      footer {
+        display: none !important;
+      }
+
+      .invoice-preview-container {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      .invoice-paper {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 1.6cm 2cm !important; /* Safely space elements inside page bounds */
+        margin: 0 !important;
+        border: none !important;
+        width: 100% !important;
+        height: 100vh !important; /* Ensure it spans the page correctly */
+        min-height: auto !important;
+        aspect-ratio: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+      }
+
+      /* Desktop-like print settings on physical layout */
+      .invoice-header {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
+      }
+
+      .invoice-header-right {
+        text-align: right !important;
+      }
+
+      .billing-grid {
+        grid-template-columns: 1fr 1fr !important;
+      }
+
+      .footer-row-top {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+      }
+
+      .footer-col-payment {
+        text-align: right !important;
+      }
+
+      /* Ensure color printing displays correctly */
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======================== SETUP FORM CONTAINER ======================== -->
+  <div class="setup-container" id="setupForm">
+    <div class="setup-header">
+      <div>
+        <h2 class="setup-title">BFit with Krishna Inc.</h2>
+        <div class="setup-subtitle">Invoice Generator Dashboard</div>
+      </div>
+      <div>
+        <span style="font-size: 13px; background: #e0f2fe; color: #0369a1; padding: 6px 12px; border-radius: 20px; font-weight: 600;">v1.3 Responsive</span>
+      </div>
+    </div>
+
+    <!-- Live Real-Time Dashboard Summary Banner -->
+    <div class="live-summary-card">
+      <div class="live-summary-item">
+        <span class="live-summary-label">Total Classes (Qty)</span>
+        <span class="live-summary-val" id="liveQty">0</span>
+      </div>
+      <div class="live-summary-item">
+        <span class="live-summary-label">Subtotal</span>
+        <span class="live-summary-val" id="liveSubtotal">$0.00</span>
+      </div>
+      <div class="live-summary-item">
+        <span class="live-summary-label">Tax Total (HST)</span>
+        <span class="live-summary-val" id="liveTax">$0.00</span>
+      </div>
+      <div class="live-summary-item">
+        <span class="live-summary-label">Total Due</span>
+        <span class="live-summary-val accent" id="liveTotal">$0.00</span>
+      </div>
+    </div>
+
+    <!-- General Setup Inputs -->
+    <div class="form-grid">
+      <div class="form-group span-2">
+        <label for="billTo">Bill To Location</label>
+        <select id="billTo" onchange="calculateInvoice()">
+          <option value="ajax">Club Pilates Ajax</option>
+          <option value="whitby">Club Pilates Whitby</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="costPerClass">Cost per Class ($)</label>
+        <input type="number" id="costPerClass" value="60.00" step="0.01" min="0" oninput="calculateInvoice()">
+      </div>
+      <div class="form-group">
+        <label for="taxRate">Sales Tax Rate (%)</label>
+        <input type="number" id="taxRate" value="13.00" step="0.01" min="0" oninput="calculateInvoice()">
+      </div>
+      <div class="form-group">
+        <label for="invoiceNo">Invoice Number</label>
+        <input type="text" id="invoiceNo" value="May31-2026" oninput="calculateInvoice()">
+      </div>
+      <div class="form-group">
+        <label for="invoiceDate">Invoice Date</label>
+        <input type="date" id="invoiceDate" value="2026-05-31" onchange="calculateInvoice()">
+      </div>
+    </div>
+
+    <!-- Dynamic Session Rows Panel -->
+    <div class="session-rows-title">
+      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4H5c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H5V8h14v10zM9 10H7v2h2v-2zm0 4H7v2h2v-2zm4-4h-2v2h2v-2zm0 4h-2v2h2v-2zm4-4h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+      Session Timings & Dates
+    </div>
+    
+    <div id="sessionRowsContainer">
+      <!-- Dynamic rows are inserted here by JavaScript -->
+    </div>
+
+    <!-- Actions Panel -->
+    <div class="actions-panel">
+      <button class="btn btn-secondary" onclick="addNewSessionRow()">
+        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        + Add Another Date
+      </button>
+      <button class="btn btn-primary" onclick="generateInvoice()">
+        Next -> Generate Invoice
+        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ======================== INVOICE PREVIEW CONTAINER ======================== -->
+  <div class="invoice-preview-container" id="invoicePreviewContainer">
+    <div class="invoice-paper">
+      
+      <!-- Top Section -->
+      <div>
+        <!-- Invoice Header -->
+        <div class="invoice-header">
+          <div class="invoice-header-left">
+            <h1>INVOICE</h1>
+            <div class="hst-number">HST#: 744977810RT0001</div>
+          </div>
+          <div class="invoice-header-right">
+            <div><strong>Invoice No:</strong> <span id="invNumberVal">May31-2026</span></div>
+            <div><strong>Date:</strong> <span id="invDateVal">May-31-2026</span></div>
+            <div><strong>Location:</strong> <span id="invLocVal">Ajax, ON, L1T 0J9</span></div>
+          </div>
+        </div>
+
+        <!-- Address Grid Block -->
+        <div class="billing-grid">
+          <div class="billing-col">
+            <div class="billing-title">Bill To</div>
+            <div class="billing-name" id="billToName">Club Pilates Ajax</div>
+            <div class="billing-address" id="billToAddress">1965 Salim Road N<br>Ajax, ON, L1T 0J9</div>
+          </div>
+          <div class="billing-col" style="padding-left: 0; border-left: none; border-top: 1px dashed #e2e8f0; padding-top: 15px; margin-top: 5px;">
+            <!-- Note: JS will add border-left styling dynamically on desktop, handled beautifully in responsive CSS media query instead -->
+            <div class="billing-title">Invoice For</div>
+            <div class="billing-name" style="color: var(--primary);">Pilates Reformer</div>
+            <div class="billing-address">Professional Reformer Session Instruction</div>
+          </div>
+        </div>
+
+        <!-- Table Breakdown -->
+        <div class="invoice-table-wrapper">
+          <table class="invoice-table">
+            <thead>
+              <tr>
+                <th style="width: 15%">Item # / Date</th>
+                <th style="width: 50%">Description</th>
+                <th class="text-center" style="width: 10%">Qty</th>
+                <th class="text-right" style="width: 12%">Unit Price</th>
+                <th class="text-right" style="width: 13%">Price</th>
+              </tr>
+            </thead>
+            <tbody id="invoiceTableBody">
+              <!-- Item rows populated dynamically by Javascript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Bottom Summary & Footer -->
+      <div>
+        <!-- Summary Totals -->
+        <div class="summary-wrapper">
+          <table class="summary-table">
+            <tr>
+              <td>Invoice Subtotal:</td>
+              <td class="text-right" id="summarySubtotal">$0.00</td>
+            </tr>
+            <tr>
+              <td>Sales Tax (<span id="summaryTaxRate">13.00</span>%):</td>
+              <td class="text-right" id="summaryTaxVal">$0.00</td>
+            </tr>
+            <tr class="total-row">
+              <td>Total Due:</td>
+              <td class="text-right" id="summaryTotalDue">$0.00</td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Hardcoded Professional Footer -->
+        <div class="invoice-footer">
+          <div class="footer-row-top">
+            <div class="footer-col-biz">
+              <span class="footer-highlight">Business & Payment Details:</span><br>
+              BFit with Krishna Inc.<br>
+              807 Crowells St, Oshawa, ON, L1K1X4<br>
+              P: 647-204-7712 | F: Fax Number
+            </div>
+            <div class="footer-col-payment">
+              <span class="footer-highlight">Payment Execution:</span><br>
+              Etransfer To: <span style="font-weight: 600; color: #1e293b;">bodawalakrishna@gmail.com</span><br>
+              Email: <span style="font-weight: 600; color: #1e293b;">bodawalakrishna@gmail.com</span>
+            </div>
+          </div>
+          <div class="footer-disclaimer">
+            "Make all checks payable to BFit with Krishna Inc."
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Print Button (Hidden in Printing) -->
+    <div class="preview-actions">
+      <button class="btn btn-secondary" onclick="scrollToSetup()">
+        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        Back to Setup
+      </button>
+      <button class="btn btn-primary" style="background: var(--primary);" onclick="window.print()">
+        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+        Print / Download PDF
+      </button>
+    </div>
+  </div>
+
+  <!-- ======================== JAVASCRIPT LOGIC ======================== -->
+  <script>
+    // Configuration Map for client locations
+    const locations = {
+      ajax: {
+        name: "Club Pilates Ajax",
+        address: "1965 Salim Road N\nAjax, ON, L1T 0J9",
+        locationStr: "Ajax, ON, L1T 0J9"
+      },
+      whitby: {
+        name: "Club Pilates Whitby",
+        address: "5530 Baldwin St S Unit B2\nWhitby, ON L1M 1T5, Canada",
+        locationStr: "Whitby, ON L1M 1T5"
+      }
+    };
+
+    // Available session timings
+    const sessionTimings = [
+      "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM",
+      "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM"
+    ];
+
+    // Date generation for the dropdown (May 1 to May 31)
+    function generateDateOptions() {
+      let optionsHtml = '';
+      for (let day = 1; day <= 31; day++) {
+        const dateStr = `${day}-May`;
+        optionsHtml += `<option value="${dateStr}">${dateStr}</option>`;
+      }
+      return optionsHtml;
+    }
+
+    const dateOptionsHtml = generateDateOptions();
+
+    // Helper to generate a unique random ID for row tracking
+    function generateUniqueId() {
+      return 'row_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    // Function to add a new dynamic row (Mobile-First Structure)
+    function addNewSessionRow(selectedDate = "1-May", checkedTimings = []) {
+      const container = document.getElementById('sessionRowsContainer');
+      const rowId = generateUniqueId();
+      
+      const rowDiv = document.createElement('div');
+      rowDiv.className = 'session-row';
+      rowDiv.id = rowId;
+
+      // Dropdown Date Select and Mobile delete button inside header container
+      let selectHtml = `
+      <div class="session-row-header">
+        <div class="form-group" style="flex-grow: 1; width: auto;">
+          <label>Class Date</label>
+          <select class="row-date-select" onchange="calculateInvoice()">
+            ${generateDateOptionsWithSelected(selectedDate)}
+          </select>
+        </div>
+        <button class="btn-delete mobile-delete" title="Delete Row" onclick="deleteSessionRow('${rowId}')">✕</button>
+      </div>`;
+
+      // Checkboxes list
+      let checkboxesHtml = `
+      <div class="form-group" style="width: 100%; flex-grow: 1;">
+        <label>Select Timings <span class="timing-count-badge" id="${rowId}_count" style="font-weight: bold; color: var(--primary-light); font-size: 11px; margin-left: 5px;">(${checkedTimings.length} selected)</span></label>
+        <div class="timing-container">`;
+      
+      sessionTimings.forEach(time => {
+        const checked = checkedTimings.includes(time) ? 'checked' : '';
+        const checkboxId = `${rowId}_${time}`;
+        checkboxesHtml += `
+          <div class="timing-badge">
+            <input type="checkbox" id="${checkboxId}" class="row-timing-cb" value="${time}" ${checked} onchange="calculateInvoice()">
+            <label for="${checkboxId}" class="timing-label">${time}</label>
+          </div>`;
+      });
+      
+      checkboxesHtml += `</div></div>`;
+
+      // Desktop-Only Delete Button (Hides on Mobile)
+      const deleteBtnHtml = `
+        <button class="btn-delete desktop-delete" title="Delete Row" onclick="deleteSessionRow('${rowId}')">✕</button>
+      `;
+
+      rowDiv.innerHTML = selectHtml + checkboxesHtml + deleteBtnHtml;
+      container.appendChild(rowDiv);
+      calculateInvoice();
+    }
+
+    // Helper to generate dropdown options with correct selected value
+    function generateDateOptionsWithSelected(selectedDate) {
+      let optionsHtml = '';
+      for (let day = 1; day <= 31; day++) {
+        const dateStr = `${day}-May`;
+        const selected = (dateStr === selectedDate) ? 'selected' : '';
+        optionsHtml += `<option value="${dateStr}" ${selected}>${dateStr}</option>`;
+      }
+      return optionsHtml;
+    }
+
+    // Delete row
+    function deleteSessionRow(rowId) {
+      const row = document.getElementById(rowId);
+      if (row) {
+        row.remove();
+        calculateInvoice();
+      }
+    }
+
+    // Scrolling utility helpers
+    function scrollToSetup() {
+      document.getElementById('setupForm').style.display = 'block';
+      document.getElementById('invoicePreviewContainer').style.display = 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Formatting money
+    function formatCurrency(val) {
+      return '$' + val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    // MAIN JS CALCULATOR & STATE SYNC
+    function calculateInvoice() {
+      // Gather inputs
+      const billToKey = document.getElementById('billTo').value;
+      const costPerClass = parseFloat(document.getElementById('costPerClass').value) || 0;
+      const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+      const invoiceNumber = document.getElementById('invoiceNo').value;
+      const invoiceDate = document.getElementById('invoiceDate').value;
+
+      const selectedLocation = locations[billToKey];
+
+      // Retrieve dynamic rows data
+      const rows = document.querySelectorAll('.session-row');
+      let totalQty = 0;
+      let totalSubtotal = 0;
+
+      rows.forEach(row => {
+        const rowId = row.id;
+        const checkedCheckboxes = row.querySelectorAll('.row-timing-cb:checked');
+        const qty = checkedCheckboxes.length;
+        totalQty += qty;
+        
+        // Update row specific badge count
+        const countBadge = document.getElementById(`${rowId}_count`);
+        if (countBadge) {
+          countBadge.innerText = `(${qty} selected)`;
+        }
+      });
+
+      totalSubtotal = totalQty * costPerClass;
+      const salesTaxVal = (totalSubtotal * taxRate) / 100;
+      const totalDueVal = totalSubtotal + salesTaxVal;
+
+      // Update Live Setup Dashboard Summary
+      document.getElementById('liveQty').innerText = totalQty;
+      document.getElementById('liveSubtotal').innerText = formatCurrency(totalSubtotal);
+      document.getElementById('liveTax').innerText = formatCurrency(salesTaxVal);
+      document.getElementById('liveTotal').innerText = formatCurrency(totalDueVal);
+
+      return {
+        selectedLocation,
+        costPerClass,
+        taxRate,
+        invoiceNumber,
+        invoiceDate,
+        totalQty,
+        totalSubtotal,
+        salesTaxVal,
+        totalDueVal,
+        rows
+      };
+    }
+
+    function formatDateString(dateStr) {
+      if (!dateStr) return '';
+      const date = new Date(dateStr + 'T00:00:00');
+      if (isNaN(date.getTime())) return dateStr;
+      
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const day = date.getDate();
+      const month = months[date.getMonth()];
+      const year = date.getFullYear();
+      
+      return `${month}-${day}-${year}`;
+    }
+
+    // Generate Invoice Breakdown Action
+    function generateInvoice() {
+      const data = calculateInvoice();
+
+      // Populate basic details in preview
+      document.getElementById('invNumberVal').innerText = data.invoiceNumber;
+      document.getElementById('invDateVal').innerText = formatDateString(data.invoiceDate);
+      document.getElementById('invLocVal').innerText = data.selectedLocation.locationStr;
+
+      document.getElementById('billToName').innerText = data.selectedLocation.name;
+      document.getElementById('billToAddress').innerHTML = data.selectedLocation.address.replace(/\n/g, '<br>');
+
+      // Generate items in table
+      const tbody = document.getElementById('invoiceTableBody');
+      tbody.innerHTML = '';
+
+      let index = 1;
+      data.rows.forEach(row => {
+        const dateSelect = row.querySelector('.row-date-select');
+        const dateVal = dateSelect.value;
+        
+        const checkedCheckboxes = row.querySelectorAll('.row-timing-cb:checked');
+        if (checkedCheckboxes.length > 0) {
+          const times = Array.from(checkedCheckboxes).map(cb => cb.value).join(', ');
+          const qty = checkedCheckboxes.length;
+          const linePrice = qty * data.costPerClass;
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${dateVal}</td>
+            <td>Pilates Reformer (${times})</td>
+            <td class="text-center">${qty}</td>
+            <td class="text-right">${formatCurrency(data.costPerClass)}</td>
+            <td class="text-right">${formatCurrency(linePrice)}</td>
+          `;
+          tbody.appendChild(tr);
+          index++;
+        }
+      });
+
+      // Handle case with no classes selected
+      if (tbody.innerHTML === '') {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align: center; color: var(--text-muted); font-style: italic; padding: 30px;">
+              No classes or session times selected. Add a date above and select timings.
+            </td>
+          </tr>
+        `;
+      }
+
+      // Populate financial summaries
+      document.getElementById('summarySubtotal').innerText = formatCurrency(data.totalSubtotal);
+      document.getElementById('summaryTaxRate').innerText = data.taxRate.toFixed(2);
+      document.getElementById('summaryTaxVal').innerText = formatCurrency(data.salesTaxVal);
+      document.getElementById('summaryTotalDue').innerText = formatCurrency(data.totalDueVal);
+
+      // Transition visibility
+      document.getElementById('setupForm').style.display = 'none';
+      const previewContainer = document.getElementById('invoicePreviewContainer');
+      previewContainer.style.display = 'flex';
+      
+      // Smooth scroll to invoice section
+      previewContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // INITIALIZATION & DEFAULT SEEDING
+    window.onload = function() {
+      // Seed with some common default session rows
+      addNewSessionRow("4-May", ["8AM", "9AM"]);
+      addNewSessionRow("11-May", ["8AM", "9AM", "10AM"]);
+      addNewSessionRow("18-May", ["8AM", "9AM"]);
+      addNewSessionRow("25-May", ["8AM", "9AM"]);
+      
+      calculateInvoice();
+    };
+  </script>
+</body>
+</html>
