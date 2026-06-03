@@ -890,6 +890,98 @@
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
+      
+      .apple-toast {
+        display: none !important;
+      }
+    }
+
+    /* macOS Style Toast Notification */
+    .apple-toast {
+      position: fixed;
+      top: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 92%;
+      max-width: 400px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+      z-index: 9999;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      transition: top 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+      opacity: 0;
+    }
+
+    .apple-toast.show {
+      top: 20px;
+      opacity: 1;
+    }
+
+    .toast-icon {
+      background: var(--primary);
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .toast-content {
+      flex-grow: 1;
+    }
+
+    .toast-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .toast-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .toast-time {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .toast-body {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--primary-dark);
+      line-height: 1.4;
+    }
+
+    .toast-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      padding: 2px;
+      transition: var(--transition);
+    }
+
+    .toast-close:hover {
+      color: var(--primary-dark);
     }
   </style>
 </head>
@@ -1328,6 +1420,123 @@
       previewContainer.scrollIntoView({ behavior: 'smooth' });
     }
 
+    const quotes = [
+      "You are entirely up to yourself to rewrite your story. Own your power.",
+      "The world needs the magic that only you can create. Don't hide your light.",
+      "You have survived 100% of your hardest days. Your resilience is your superpower.",
+      "Be the woman who decided to go after everything she ever wanted.",
+      "Storms don't come to destroy your path; they come to clear it.",
+      "You don't need a cape to be a hero; your courage to stand up every morning is enough.",
+      "You are not broken; you are breaking through into the next version of yourself.",
+      "The voice in your head that says 'you can' is infinitely louder than the crowd saying 'you can't.'",
+      "Softness is not weakness. It takes immense strength to stay kind in a harsh world.",
+      "You are the artist of your own life. Do not give the paintbrush to anyone else.",
+      "Great things never came from comfort zones. Step out and shine.",
+      "Don't decrease your goal; increase your effort.",
+      "The dream was planted in your heart because you have the capacity to achieve it.",
+      "Action cures fear. Start before you are completely ready.",
+      "Your goals don't care how you feel; they care how consistently you show up.",
+      "Make your vision so clear that your excuses become completely irrelevant.",
+      "The secret to moving forward is simply taking the very first step.",
+      "Don't wait for the perfect moment. Take the moment and make it perfect.",
+      "You are one decision away from a completely different life.",
+      "Dream big, work hard, stay focused, and surround yourself with good people.",
+      "What if it goes right? Focus on the beautiful possibilities.",
+      "Doubt kills more dreams than failure ever will.",
+      "You are allowed to be both a masterpiece and a work in progress simultaneously.",
+      "Do it scared. Courage is acting in spite of fear, not in its absence.",
+      "You are enough just as you are. You do not need to prove your worth to anyone.",
+      "Do not let the shadows of your past block the sunlight of your future.",
+      "Your value does not decrease based on someone else's inability to see your worth.",
+      "Stop shrinking yourself to fit into places you have outgrown.",
+      "Believe you can and you are already halfway there.",
+      "Confidence isn't thinking you are better than everyone else; it's not comparing yourself at all.",
+      "Growth is often quiet, slow, and completely invisible from the outside.",
+      "Give yourself the same grace and patience you so freely offer to others.",
+      "Beautiful things take time to bloom. Trust your unique timeline.",
+      "Every single mistake is just an unpolished lesson in disguise.",
+      "You are evolving every single day. Honor the journey you are on.",
+      "Rest when you need to, but never give up on what matters to you.",
+      "Your current situation is just a single chapter, not the whole book.",
+      "Celebrate your small wins; they are the building blocks of massive success.",
+      "Patience is a quiet form of strength. Keep planting your seeds.",
+      "Be gentle with your heart while you are building your empire.",
+      "She remembered who she was, and the game changed completely.",
+      "Build your own table instead of waiting for an invitation to sit down.",
+      "They will judge you anyway, so you might as well live life completely on your own terms.",
+      "Success is the sweetest response to everyone who doubted your path.",
+      "Be a first-rate version of yourself, not a second-rate version of someone else.",
+      "Your ambition is a gift, not a flaw. Own your drive.",
+      "Turn your wounds into wisdom and your barriers into breakthroughs.",
+      "The most rebellious thing you can do in this world is to love yourself completely.",
+      "You were born to stand out, not to blend into the background.",
+      "Go forward fiercely. The future belongs to those who believe in the beauty of their dreams."
+    ];
+
+    function showQuoteNotification() {
+      // Remove any existing toast first
+      const existingToast = document.querySelector('.apple-toast');
+      if (existingToast) {
+        existingToast.remove();
+      }
+
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      
+      const toast = document.createElement('div');
+      toast.className = 'apple-toast';
+      toast.innerHTML = `
+        <div class="toast-icon">✨</div>
+        <div class="toast-content">
+          <div class="toast-header">
+            <span class="toast-title">BFit Inspiration</span>
+            <span class="toast-time">now</span>
+          </div>
+          <div class="toast-body">"${randomQuote}"</div>
+        </div>
+        <button class="toast-close" onclick="closeToast(this)">✕</button>
+      `;
+
+      document.body.appendChild(toast);
+      
+      // Force reflow
+      toast.offsetHeight;
+      
+      // Slide down
+      toast.classList.add('show');
+
+      // Auto close after 10 seconds
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toast.classList.remove('show');
+          setTimeout(() => {
+            if (toast.parentNode) toast.remove();
+          }, 600);
+        }
+      }, 10000);
+    }
+
+    function closeToast(btn) {
+      const toast = btn.closest('.apple-toast');
+      if (toast) {
+        toast.classList.remove('show');
+        setTimeout(() => {
+          if (toast.parentNode) toast.remove();
+        }, 600);
+      }
+    }
+
+    function scheduleNextQuote() {
+      // Random delay between 1.5 to 2.5 minutes (90,000ms to 150,000ms)
+      const minDelay = 90000;
+      const maxDelay = 150000;
+      const randomDelay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
+      
+      setTimeout(() => {
+        showQuoteNotification();
+        scheduleNextQuote();
+      }, randomDelay);
+    }
+
     // INITIALIZATION & DEFAULT SEEDING
     window.onload = function() {
       // Seed with some common default session rows using standard ISO format
@@ -1337,6 +1546,12 @@
       addNewSessionRow("2026-05-25", ["8AM", "9AM"]);
       
       calculateInvoice();
+
+      // Show first quote notification after 20 seconds, then schedule randomly
+      setTimeout(() => {
+        showQuoteNotification();
+        scheduleNextQuote();
+      }, 20000);
     };
   </script>
 </body>
